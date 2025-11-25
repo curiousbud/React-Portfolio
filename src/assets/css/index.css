@@ -1,3 +1,35 @@
+@import "tailwindcss";
+
+:root {
+	--icon-color: #74bcdc;
+    --clr: #74bcdc;
+    --bg: black;
+    background-color: black;
+    color: white;
+}
+
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+header {
+    text-align: center;
+    padding: 5px 20px 0px 10px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "JetBrains Mono", monospace;
+    background-color: var(--bg);
+    color: var(--clr);
+}
+
 /* Reusable animated nav-buttons class for React+Tailwind */
 .nav-animated {
     position: relative;
@@ -69,29 +101,6 @@
 .nav-animated a span {
     filter: drop-shadow(0 0 20px var(--icon-color)) drop-shadow(0 0 40px var(--icon-color)) drop-shadow(0 0 60px var(--icon-color));
 }
-@import "tailwindcss";
-
-:root {
-	--icon-color: #74bcdc;
-    --clr: #74bcdc;
-    --bg: black;
-    background-color: black;
-    color: white;
-}
-
-header {
-    text-align: center;
-    padding: 5px 20px 0px 10px;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "JetBrains Mono", monospace;
-    background-color: var(--bg);
-    color: var(--clr);
-}
-
 
 /* Reusable animated logo class for React+Tailwind */
 .logo-animated {
@@ -150,81 +159,44 @@ body {
     transition: 0.5s;
 }
 
-.icon-animation {
-    position: relative;
-    list-style: none;
-    width: 8rem;
-    height: 8rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: 0.5s;
-    text-decoration: none;
-    z-index: 1; /* Ensure the icon is above the pseudo-elements */
+.nav-icon {
+  font-size: 1.5em !important; /* Reduce to half or less of the original 2em */
+  transition: 0.5s;
+  color: var(--icon-color);
+  opacity: 1;
+  z-index: 2;
 }
 
-.icon-animation a::before{
-    content: '';
-    position: absolute;
-    inset: 30px;
-    box-shadow: 0 0 0 10px var(--clr), 0 0 0 20px var(--bg), 0 0 0 22px var(--clr);
-    transition: 0.5s;
-    z-index: -1; /* Move the pseudo-element below the icon */
+.nav-animated a:hover .nav-icon {
+  color: var(--icon-color);
+  transform: translateY(-40%);
+  z-index: 2;
+  filter: drop-shadow(0 0 20px var(--icon-color)) drop-shadow(0 0 40px var(--icon-color)) drop-shadow(0 0 60px var(--icon-color));
 }
 
-.icon-animation a:hover::before{
-    inset: 15px;
-}   
-
-.icon-animation a::after{
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--bg);
-    transform: rotate(45deg);
-    transition: 0.5s;
-    text-align: center;
-    z-index: -1;
+.marquee-container {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+  height: 80px;
 }
 
-.icon-animation a:hover::after{
-    inset: 0px;
-    transform: rotate(0deg);
+.marquee-track {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  animation: marquee-scroll 18s linear infinite;
 }
 
-.icon-animation a span{
-    font-size: 2em;
-    transition: 0.5s;
-    color: var(--clr);
-    opacity: 1;
-    z-index: 2; /* Adjusted z-index to 2 */
-}
-
-.icon-animation a:hover img{
-    color: var(--clr);
-    transform: translateY(-40%);
-    z-index: 2; /* Adjusted z-index to 2 */
-}
-
-.icon-animation span {
-    position: absolute;
-    color: var(--clr);
-    opacity: 0;
-    transition: 0.5s;
-    transform: scale(0) translateY(200%);
-    z-index: 1; /* Adjusted z-index to 1 */
-}
-
-.icon-animation a:hover span {
-    opacity: 1;
-    transform: scale(1) translateY(0%);
-    z-index: 1; /* Adjusted z-index to 1 */
-}
-
-.icon-animation a:hover img,
-.icon-animation a p{
-    filter: drop-shadow(0 0 20px var(--clr)) drop-shadow(0 0 40px var(--clr))
-    drop-shadow(0 0 60px var(--clr));;
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 

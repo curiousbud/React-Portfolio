@@ -6,15 +6,15 @@ function Navbar() {
   return (
     <>
         <header>
-            <nav className="navbar flex justify-between items-center p-2">
+            <nav className="navbar flex justify-between items-center p-2 h-16 w-100% mt-3">
                 <div className="nav-animated">
                     <a
                         href="/"
-                        className="flex flex-col items-center justify-center group relative w-32 h-32"
+                        className="flex flex-col items-center justify-center group relative h-100% w-100%"
                     >
                         <img
                             src={areebLogo}
-                            className="logo h-16 w-16 transition-all duration-500 z-2 opacity-100 scale-100 group-hover:scale-120"
+                            className="logo h-100% w-15 transition-all duration-500 z-2 opacity-100 scale-100 group-hover:scale-120"
                             alt="Areeb logo"
                         />
                         <span
@@ -25,34 +25,34 @@ function Navbar() {
                     </a>
                 </div>
                 <div>
-                    <ul className="nav-animated flex space-x-0.5 text-lg p-2">
+                    <ul className="nav-animated flex space-x-1 text-lg p-2">
                             <li>
                                 <a href="#" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-house text-(--icon-color) m-1 text-lg sm:text-xl"></i>
+                                    <i className="fa-solid fa-house nav-icon m-1"></i>
                                     <span>Home</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-user text-(--icon-color) m-1 text-lg sm:text-xl"></i>
+                                    <i className="fa-solid fa-user nav-icon m-1"></i>
                                     <span>Profile</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-phone text-(--icon-color) m-1 text-lg sm:text-xl"></i>
+                                    <i className="fa-solid fa-phone nav-icon m-1"></i>
                                     <span>Contact</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-file text-(--icon-color) m-1 text-lg sm:text-xl"></i>
+                                    <i className="fa-solid fa-file nav-icon m-1"></i>
                                     <span>Projects</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-magnifying-glass text-(--icon-color) m-1 text-lg sm:text-xl"></i>
+                                    <i className="fa-solid fa-magnifying-glass nav-icon m-1"></i>
                                     <span>Search</span>
                                 </a>
                             </li>
