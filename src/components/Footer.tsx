@@ -1,10 +1,21 @@
 import React from 'react';
 import PowerButton from './PowerButton';
+// import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  onPowerClick?: () => void;
+  powerState?: 'off' | 'booting' | 'on' | 'shuttingDown';
+  disablePower?: boolean;
+}
+
+const Footer: React.FC<FooterProps> = ({ onPowerClick, powerState = 'off', disablePower = false }) => {
   return (
-    <footer className="footer flex items-center justify-between text-white h-12 border-t border-(--icon-color) mt-4 sticky bottom-0 bg-black z-50">
-      <PowerButton />
+    <footer className="footer flex items-center justify-between text-white h-12 border-t border-(--icon-color) mt-4 sticky bottom-0 bg-black z-10000">
+      <PowerButton
+        onClick={onPowerClick}
+        powerState={powerState}
+        disabled={disablePower}
+      />
       <div className="footerContainer p-0.25rem 0">
         <p className="copyright m-2">
           <span className="copyright-symbol">©</span>
@@ -18,6 +29,9 @@ const Footer: React.FC = () => {
             Areeb Khan
           </a>{' '}
           | All Rights Reserved
+          <span style={{ marginLeft: 16 }}>
+            {/* Terminal Demo button removed as per new navigation logic */}
+          </span>
         </p>
       </div>
       <div className='h-2'></div>

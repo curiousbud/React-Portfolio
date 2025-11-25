@@ -23,8 +23,9 @@ const Projects: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const sectionStyle = !projects.length && !loading ? { display: 'none' } : undefined;
   return (
-    <section id="projects" ref={ref} className={`projects-section py-16 fade-in-section${isVisible ? ' is-visible' : ''}`}>
+    <section id="projects" ref={ref} className={`projects-section py-16 fade-in-section${isVisible ? ' is-visible' : ''}`} style={sectionStyle}>
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">
         Projects
       </h2>

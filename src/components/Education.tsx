@@ -1,11 +1,23 @@
+/**
+ * Education Section
+ * Renders a list of education entries from sanitized config.
+ * Section is hidden (display: none) if no educations are present.
+ */
 import React from 'react';
-import CONFIG from '../../gitprofile.config';
+import CONFIG from '../utils/sanitizeConfig';
+
+interface EducationType {
+  institution: string;
+  degree: string;
+  year: string;
+  details?: string;
+}
 
 const Education: React.FC = () => {
-  const educations = CONFIG.educations || [];
-  if (!educations.length) return null;
+  const educations: EducationType[] = CONFIG.educations || [];
+  const sectionStyle = !educations.length ? { display: 'none' } : undefined;
   return (
-    <section id="education" className="education-section pt-4 pb-4">
+    <section id="education" className="education-section pt-4 pb-4" style={sectionStyle}>
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">Education</h2>
       <div className="flex flex-col gap-4 mt-4">
         {educations.map((edu, idx) => (
@@ -20,4 +32,5 @@ const Education: React.FC = () => {
   );
 };
 
+Education.displayName = 'EducationSection';
 export default Education;

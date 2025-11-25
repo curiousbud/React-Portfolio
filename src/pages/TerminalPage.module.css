@@ -1,0 +1,134 @@
+.terminal-root {
+  background: #0a0e27;
+  min-height: 100vh;
+  width: 100vw;
+  font-family: 'Fira Mono', 'Consolas', 'Monospace', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.terminal-window {
+  background: #1a1d2e;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(116, 188, 220, 0.15),
+              0 0 0 1px rgba(116, 188, 220, 0.2);
+  width: 100%;
+  max-width: 1200px;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.terminal-header {
+  background: linear-gradient(180deg, #2a2d3e 0%, #1f222f 100%);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(116, 188, 220, 0.2);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.terminal-buttons span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.btn-close {
+  background: #ff5f57;
+  box-shadow: 0 0 8px rgba(255, 95, 87, 0.4);
+}
+
+.btn-minimize {
+  background: #ffbd2e;
+  box-shadow: 0 0 8px rgba(255, 189, 46, 0.4);
+}
+
+.btn-maximize {
+  background: #28c840;
+  box-shadow: 0 0 8px rgba(40, 200, 64, 0.4);
+}
+
+.terminal-title {
+  color: #74bcdc;
+  font-size: 0.9rem;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+  margin-right: 5rem;
+}
+
+.terminal-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: #0d1117;
+  color: #74bcdc;
+}
+
+.terminal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+  background: #1a1d2e;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+  background: #74bcdc;
+  border-radius: 4px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb:hover {
+  background: #5a9cbc;
+}
+
+@media (max-width: 768px) {
+  .terminal-root {
+    padding: 1rem;
+  }
+  
+  .terminal-window {
+    min-height: 80vh;
+    border-radius: 8px;
+  }
+  
+  .terminal-header {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .terminal-title {
+    font-size: 0.8rem;
+    margin-right: 3rem;
+  }
+  
+  .terminal-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-root {
+    padding: 0.5rem;
+  }
+  
+  .terminal-buttons span {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .terminal-title {
+    font-size: 0.7rem;
+    margin-right: 2rem;
+  }
+}

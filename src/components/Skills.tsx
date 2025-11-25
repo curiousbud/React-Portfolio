@@ -1,62 +1,76 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useFadeInSection } from '../hooks/useFadeInSection';
-import CONFIG from '../../gitprofile.config';
+import CONFIG from '../utils/sanitizeConfig';
 import { skillsMarquee } from '../assets/ts/skillsMarquee';
 
-// Skill interface for type safety
+
+/**
+ * Skill interface for type safety
+ */
 interface Skill {
   name: string;
   logo?: string;
 }
 
-const LOGO_WIDTH = 180; // px (further increased to prevent overlap)
-const SPEED = 1; // px per frame
+
+// Logo width in px (adjust to prevent overlap)
+const LOGO_WIDTH = 180;
+// Marquee speed in px per frame
+const SPEED = 1;
 
 /**
- * The Skills component displays a horizontally scrolling (marquee) list of skill logos and names.
- * The animation logic is defined in src/assets/js/skillsMarquee.ts for maintainability and reusability.
+ * Skills Section
+ * Renders a horizontally scrolling marquee of skill logos and names.
+ * Section is hidden (display: none) if no skills are present in config.
+ * Uses sanitized CONFIG from utils/sanitizeConfig for data.
  *
- * The animation works by updating the position of each logo using requestAnimationFrame.
- * When a logo exits the left edge, it re-enters from the right edge, creating a continuous snake-like effect.
- *
- * To adjust the animation, modify the logic in skillsMarquee.ts or the constants LOGO_WIDTH and SPEED here.
+ * Animation logic is in src/assets/ts/skillsMarquee.ts.
  */
 const Skills: React.FC = () => {
+
+  // Fade-in animation on scroll
   const [ref, isVisible] = useFadeInSection<HTMLElement>();
-  // Support both array of strings and array of objects for backward compatibility
+  // Normalize skills array from config (support string or object)
   const skills: Skill[] = (CONFIG.skills || []).map((skill: string | Skill) =>
     typeof skill === 'string' ? { name: skill } : skill
   );
+  // State for logo positions and container width
   const [positions, setPositions] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  // Holds the width of the container for animation calculations
   const [containerWidth, setContainerWidth] = useState(0);
-  // Holds the cleanup function for the animation frame
+  // Ref for animation cleanup
   const animationCleanup = useRef<(() => void) | undefined>(undefined);
+
 
   // Set up initial positions for the skills when the component mounts or skills change
   useEffect(() => {
     if (containerRef.current) {
       const baseWidth = containerRef.current.offsetWidth;
       setContainerWidth(baseWidth);
-      // Space out each skill by baseWidth + i * (baseWidth + LOGO_WIDTH)
       setPositions(Array(skills.length).fill(0).map((_, i) => baseWidth + i * (LOGO_WIDTH + 40)));
     }
   }, [skills.length]);
 
-  // Start the marquee animation using the imported skillsMarquee helper
+  // Start/cleanup marquee animation
   useEffect(() => {
     if (!containerWidth) return;
     if (animationCleanup.current) animationCleanup.current();
-    // skillsMarquee.start returns a cleanup function to stop the animation
     animationCleanup.current = skillsMarquee.start(setPositions, containerWidth, LOGO_WIDTH, SPEED);
     return () => {
       if (animationCleanup.current) animationCleanup.current();
     };
-  }, [containerWidth]);
+  }, [containerWidth, skills.length]);
+
+  // Use CSS to hide section if no skills
+  const sectionStyle = !skills.length ? { display: 'none' } : undefined;
 
   return (
-    <section id="skills" ref={ref} className={`skills-section text-left w-100% pt-4 pb-4 fade-in-section${isVisible ? ' is-visible' : ''}`}>
+    <section
+      id="skills"
+      ref={ref}
+      className={`skills-section text-left w-100% pt-4 pb-4 fade-in-section${isVisible ? ' is-visible' : ''}`}
+      style={sectionStyle}
+    >
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">Skills</h2>
       <div
         className="marquee-container w-full relative overflow-x-hidden"
@@ -101,4 +115,5 @@ const Skills: React.FC = () => {
   );
 };
 
+Skills.displayName = 'SkillsSection';
 export default Skills;

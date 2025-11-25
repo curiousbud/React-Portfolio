@@ -59,10 +59,12 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     const excludeForks = autoConfig.exclude?.forks;
     const excludeProjects: string[] = autoConfig.exclude?.projects || [];
 
+    // Determine orderBy field based on sortBy
+    const orderByField = sortBy === 'updated' ? 'UPDATED_AT' : 'STARGAZERS';
     const query = `
       query($login: String!, $limit: Int!) {
         user(login: $login) {
-          repositories(first: $limit, orderBy: {field: STARGAZERS, direction: DESC}, privacy: PUBLIC) {
+          repositories(first: $limit, orderBy: {field: ${orderByField}, direction: DESC}, privacy: PUBLIC) {
             nodes {
               id
               name
@@ -105,12 +107,7 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         return !excludeProjects.includes(fullName);
       });
     }
-    if (sortBy === 'updated') {
-      repos = repos.sort((a, b) => {
-        if (!a.updatedAt || !b.updatedAt) return 0;
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-      });
-    }
+    // No need to sort locally, as the API already returns the correct order
     return repos;
   }
 }

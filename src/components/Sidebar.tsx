@@ -2,7 +2,7 @@ import React from 'react';
 import '../assets/css/index.css';
 
 const navButtons = [
-	{ href: '#home', icon: 'fa-house', label: 'Home' },
+	{ href: '', icon: 'fa-house', label: 'Home' },
 	{ href: '#about', icon: 'fa-user', label: 'About' },
 	{ href: '#skills', icon: 'fa-magnifying-glass', label: 'Skills' },
 	{ href: '#projects', icon: 'fa-github', label: 'Projects' },

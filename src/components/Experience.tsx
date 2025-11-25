@@ -1,11 +1,24 @@
+/**
+ * Experience Section
+ * Renders a list of experience entries from sanitized config.
+ * Section is hidden (display: none) if no experiences are present.
+ */
 import React from 'react';
-import CONFIG from '../../gitprofile.config';
+import CONFIG from '../utils/sanitizeConfig';
+
+interface ExperienceType {
+  company: string;
+  companyLink: string;
+  position: string;
+  from: string;
+  to: string;
+}
 
 const Experience: React.FC = () => {
-  const experiences = CONFIG.experiences || [];
-  if (!experiences.length) return null;
+  const experiences: ExperienceType[] = CONFIG.experiences || [];
+  const sectionStyle = !experiences.length ? { display: 'none' } : undefined;
   return (
-    <section id="experience" className="experience-section pt-4 pb-4">
+    <section id="experience" className="experience-section pt-4 pb-4" style={sectionStyle}>
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">Experience</h2>
       <div className="flex flex-col gap-4 mt-4">
         {experiences.map((exp, idx) => (
@@ -19,4 +32,5 @@ const Experience: React.FC = () => {
   );
 };
 
+Experience.displayName = 'ExperienceSection';
 export default Experience;
