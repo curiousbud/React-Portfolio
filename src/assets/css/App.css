@@ -7,6 +7,26 @@
 	flex-direction: column;
 }
 
+main.snap-y {
+	scroll-snap-type: y mandatory;
+	overflow-y: auto;
+	height: 100vh;
+}
+
+.snap-start {
+	scroll-snap-align: start;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+main.snap-y::-webkit-scrollbar {
+	display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+main.snap-y {
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}
+
 .app-container > .footer {
 	margin-top: auto;
 }

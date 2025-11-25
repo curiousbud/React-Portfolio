@@ -1,63 +1,99 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useFadeInSection } from '../hooks/useFadeInSection';
+import CONFIG from '../../gitprofile.config';
+import { skillsMarquee } from '../assets/ts/skillsMarquee';
 
-const skills = [
-  { name: 'HTML5', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
-  { name: 'CSS3', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
-  { name: 'JavaScript', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-  { name: 'Git', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-  { name: 'Linux', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg' },
-];
+// Skill interface for type safety
+interface Skill {
+  name: string;
+  logo?: string;
+}
 
 const LOGO_WIDTH = 80; // px (including margin)
 const SPEED = 1; // px per frame
 
+/**
+ * The Skills component displays a horizontally scrolling (marquee) list of skill logos and names.
+ * The animation logic is defined in src/assets/js/skillsMarquee.ts for maintainability and reusability.
+ *
+ * The animation works by updating the position of each logo using requestAnimationFrame.
+ * When a logo exits the left edge, it re-enters from the right edge, creating a continuous snake-like effect.
+ *
+ * To adjust the animation, modify the logic in skillsMarquee.ts or the constants LOGO_WIDTH and SPEED here.
+ */
 const Skills: React.FC = () => {
+  const [ref, isVisible] = useFadeInSection<HTMLElement>();
+  // Support both array of strings and array of objects for backward compatibility
+  const skills: Skill[] = (CONFIG.skills || []).map((skill: string | Skill) =>
+    typeof skill === 'string' ? { name: skill } : skill
+  );
   const [positions, setPositions] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Holds the width of the container for animation calculations
   const [containerWidth, setContainerWidth] = useState(0);
+  // Holds the cleanup function for the animation frame
+  const animationCleanup = useRef<(() => void) | undefined>(undefined);
 
+  // Set up initial positions for the skills when the component mounts or skills change
   useEffect(() => {
     if (containerRef.current) {
       setContainerWidth(containerRef.current.offsetWidth);
-      // Initial positions: fill the container from right to left
       setPositions(Array(skills.length).fill(0).map((_, i) => containerRef.current!.offsetWidth + i * LOGO_WIDTH));
     }
-  }, []);
+  }, [skills.length]);
 
+  // Start the marquee animation using the imported skillsMarquee helper
   useEffect(() => {
     if (!containerWidth) return;
-    let animationFrame: number;
-    const animate = () => {
-      setPositions(prev => {
-        return prev.map((pos) => {
-          let newPos = pos - SPEED;
-          // If the logo has fully exited left, move it to the extreme right
-          if (newPos < -LOGO_WIDTH) {
-            newPos = containerWidth;
-          }
-          return newPos;
-        });
-      });
-      animationFrame = requestAnimationFrame(animate);
+    if (animationCleanup.current) animationCleanup.current();
+    // skillsMarquee.start returns a cleanup function to stop the animation
+    animationCleanup.current = skillsMarquee.start(setPositions, containerWidth, LOGO_WIDTH, SPEED);
+    return () => {
+      if (animationCleanup.current) animationCleanup.current();
     };
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
   }, [containerWidth]);
 
   return (
-    <section className="skills-section text-left my-8">
+    <section id="skills" ref={ref} className={`skills-section text-left w-100% fade-in-section${isVisible ? ' is-visible' : ''}`}>
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">Skills</h2>
-      <div className="marquee-container overflow-x-hidden w-full py-4 relative" ref={containerRef} style={{height: '80px'}}>
-        {positions.map((pos, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col items-center min-w-20 absolute"
-            style={{ left: pos, top: 0, width: LOGO_WIDTH, transition: 'none' }}
-          >
-            <img src={skills[idx % skills.length].logo} alt={skills[idx % skills.length].name} className="w-10 h-10 mb-2" />
-            <span className="text-sm text-(--icon-color)">{skills[idx % skills.length].name}</span>
-          </div>
-        ))}
+      <div
+        className="marquee-container overflow-x-hidden w-full relative"
+        ref={containerRef}
+        style={{ height: '80px' }}
+      >
+        {positions.map((pos, idx) => {
+          const skill = skills[idx % skills.length];
+          return (
+            <div
+              key={idx}
+              className="flex flex-row items-center justify-center absolute bg-transparent"
+              style={{
+                left: pos,
+                top: 0,
+                width: LOGO_WIDTH - 10,
+                height: '80px',
+                transition: 'none',
+                gap: '0.5rem',
+                boxSizing: 'border-box',
+              }}
+            >
+              {skill.logo && (
+                <img
+                  src={skill.logo}
+                  alt={skill.name}
+                  className="w-10 h-10 mr-2"
+                  style={{ filter: 'drop-shadow(0 0 4px #222)' }}
+                />
+              )}
+              <span
+                className="text-base font-semibold text-[--icon-color] whitespace-nowrap"
+                style={{ textShadow: '0 0 2px #000' }}
+              >
+                {skill.name}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

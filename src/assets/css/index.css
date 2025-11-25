@@ -1,3 +1,22 @@
+/* Navbar hide on scroll effect */
+.navbar-hide-on-scroll {
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    will-change: transform;
+    z-index: 100;
+}
+.navbar-hide-on-scroll.navbar-hidden {
+    transform: translateY(-100%);
+}
+/* Fade-in animation for sections */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: none;
+}
 @import "tailwindcss";
 
 :root {
@@ -8,9 +27,19 @@
     color: white;
 }
 
+
 html {
     overflow: scroll;
     overflow-x: hidden;
+    scroll-behavior: smooth;
+    scroll-padding-top: 3.5rem; /* Offset for fixed navbar, adjust if navbar height changes */
+    /* Custom property for JS or future use: --scroll-duration: 1.5s; */
+}
+
+html {
+    /* For browsers that support it, this slows down the scroll */
+    scroll-behavior: smooth;
+    transition: scroll-behavior 1.5s;
 }
 ::-webkit-scrollbar {
     width: 0;  /* Remove scrollbar space */
@@ -30,6 +59,11 @@ body {
     color: var(--clr);
 }
 
+
+p, span {
+    color: white;
+}
+
 /* Reusable animated nav-buttons class for React+Tailwind */
 .nav-animated {
     position: relative;
@@ -38,8 +72,8 @@ body {
 }
 .nav-animated a {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +85,7 @@ body {
 .nav-animated a::before {
     content: "";
     position: absolute;
-    inset: 30px;
+    inset: 20px;
     box-shadow: 0 0 0 10px var(--icon-color), 0 0 0 20px var(--bg), 0 0 0 22px var(--icon-color);
     transition: 0.5s;
     z-index: -1;

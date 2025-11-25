@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 interface PowerButtonProps {
   onClick?: () => void;
   title?: string;
@@ -14,7 +15,7 @@ const PowerButton: React.FC<PowerButtonProps> = ({ onClick, title = 'Power Off' 
       aria-label={title}
       style={{ boxSizing: 'border-box' }}
     >
-      <span className="text-3xl z-2 transition-all duration-500 text-(--icon-color)  group-hover:drop-shadow-[0_0_20px_var(--icon-color)]">
+      <span className="text-3xl z-2 transition-all duration-500 text-(--clr)  group-hover:drop-shadow-[0_0_20px_var(--icon-color)]">
         ⏻
       </span>
       

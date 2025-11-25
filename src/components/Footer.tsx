@@ -3,7 +3,7 @@ import PowerButton from './PowerButton';
 
 const Footer: React.FC = () => {
   return (
-    <footer className=" footer flex items-center justify-between text-white h-12">
+    <footer className="footer flex items-center justify-between text-white h-12 border-t border-(--icon-color) mt-4 sticky bottom-0 bg-black z-50">
       <PowerButton />
       <div className="footerContainer p-0.25rem 0">
         <p className="copyright m-2">
@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
             href="https://www.linkedin.com/in/curiousbud/"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'inherit', textDecoration: 'none' }}
+            className="text-inherit no-underline"
           >
             Areeb Khan
           </a>{' '}
