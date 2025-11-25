@@ -14,7 +14,7 @@ const AboutMe: React.FC = () => {
     <section
       id="home"
       ref={ref}
-      className={`about-me-section mt-10 h-full flex items-center justify-center bg-(--background-color) fade-in-section${isVisible ? ' is-visible' : ''}`}
+      className={`about-me-section pt-4 pb-4 h-full flex items-center justify-center bg-(--background-color) fade-in-section${isVisible ? ' is-visible' : ''}`}
     >
       <div className="w-full  px-4 md:px-5 flex flex-row items-center justify-between gap-2 relative">
         {/* Email: left, flush to edge and fully visible */}

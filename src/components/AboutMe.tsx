@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutMe: React.FC = () => {
   return (
-    <section id="about" className=" about-me mt-10 p-4 md:px-2 flex flex-col justify-center items-center snap-start px-6">
+    <section id="about" className="about-me pt-4 pb-4 flex flex-col justify-center items-center snap-start px-4 md:px-0">
       <div className="">
         <h1 className='border-b border-(--clr) text-4xl'>This is ME!</h1>
         <h2 className="text-2xl md:text-xl font-light text-left mb-8 text-(--icon-color)" style={{lineHeight: '1.1'}}>

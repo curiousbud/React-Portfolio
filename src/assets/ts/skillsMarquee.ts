@@ -8,15 +8,17 @@ export const skillsMarquee: MarqueeAnimation = {
 	start: (updatePositions, containerWidth, logoWidth, speed) => {
 		let animationFrame: number;
 		const animate = () => {
-			updatePositions(prev =>
-				prev.map((pos) => {
+			updatePositions(prev => {
+				// Find the rightmost position
+				const maxPos = Math.max(...prev);
+				return prev.map((pos) => {
 					let newPos = pos - speed;
 					if (newPos < -logoWidth) {
-						newPos = containerWidth;
+						newPos = maxPos + logoWidth;
 					}
 					return newPos;
-				})
-			);
+				});
+			});
 			animationFrame = requestAnimationFrame(animate);
 		};
 		animationFrame = requestAnimationFrame(animate);

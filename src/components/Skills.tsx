@@ -9,7 +9,7 @@ interface Skill {
   logo?: string;
 }
 
-const LOGO_WIDTH = 80; // px (including margin)
+const LOGO_WIDTH = 180; // px (further increased to prevent overlap)
 const SPEED = 1; // px per frame
 
 /**
@@ -37,8 +37,10 @@ const Skills: React.FC = () => {
   // Set up initial positions for the skills when the component mounts or skills change
   useEffect(() => {
     if (containerRef.current) {
-      setContainerWidth(containerRef.current.offsetWidth);
-      setPositions(Array(skills.length).fill(0).map((_, i) => containerRef.current!.offsetWidth + i * LOGO_WIDTH));
+      const baseWidth = containerRef.current.offsetWidth;
+      setContainerWidth(baseWidth);
+      // Space out each skill by baseWidth + i * (baseWidth + LOGO_WIDTH)
+      setPositions(Array(skills.length).fill(0).map((_, i) => baseWidth + i * (LOGO_WIDTH + 40)));
     }
   }, [skills.length]);
 
@@ -54,26 +56,26 @@ const Skills: React.FC = () => {
   }, [containerWidth]);
 
   return (
-    <section id="skills" ref={ref} className={`skills-section text-left w-100% fade-in-section${isVisible ? ' is-visible' : ''}`}>
+    <section id="skills" ref={ref} className={`skills-section text-left w-100% pt-4 pb-4 fade-in-section${isVisible ? ' is-visible' : ''}`}>
       <h2 className="text-2xl font-bold text-(--icon-color) mb-2 border-b border-(--icon-color) pb-1 text-center">Skills</h2>
       <div
-        className="marquee-container overflow-x-hidden w-full relative"
+        className="marquee-container w-full relative overflow-x-hidden"
         ref={containerRef}
-        style={{ height: '80px' }}
+        style={{ height: '80px', minWidth: `${skills.length * LOGO_WIDTH}px` }}
       >
         {positions.map((pos, idx) => {
           const skill = skills[idx % skills.length];
           return (
             <div
               key={idx}
-              className="flex flex-row items-center justify-center absolute bg-transparent"
+              className="flex flex-col items-center justify-center absolute bg-transparent"
               style={{
                 left: pos,
                 top: 0,
                 width: LOGO_WIDTH - 10,
+                minWidth: 160,
                 height: '80px',
                 transition: 'none',
-                gap: '0.5rem',
                 boxSizing: 'border-box',
               }}
             >
@@ -86,7 +88,7 @@ const Skills: React.FC = () => {
                 />
               )}
               <span
-                className="text-base font-semibold text-[--icon-color] whitespace-nowrap"
+                className="text-base font-semibold text-[--icon-color] whitespace-nowrap mt-2"
                 style={{ textShadow: '0 0 2px #000' }}
               >
                 {skill.name}
