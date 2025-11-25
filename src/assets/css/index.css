@@ -32,7 +32,7 @@ html {
     overflow: scroll;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    scroll-padding-top: 3.5rem; /* Offset for fixed navbar, adjust if navbar height changes */
+    scroll-padding-top: 3.3rem; /* Offset for fixed navbar, adjust if navbar height changes */
     /* Custom property for JS or future use: --scroll-duration: 1.5s; */
 }
 

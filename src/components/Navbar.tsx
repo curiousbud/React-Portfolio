@@ -1,10 +1,15 @@
 // import React from 'react'
 import areebLogo from '../assets/areeb.svg'
+
 import '../assets/css/index.css'
 import { useHideOnScrollNavbar } from '../hooks/useHideOnScrollNavbar';
+import Sidebar from './Sidebar';
+import { useState } from 'react';
+
 
 function Navbar() {
     const visible = useHideOnScrollNavbar();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     return (
         <>
             <header>
@@ -26,39 +31,19 @@ function Navbar() {
                         </span>
                     </a>
                 </div>
-                <div>
-                    <ul className="nav-animated flex space-x-1 text-sm p-2">
-                            <li>
-                                <a href="#home" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-house nav-icon m-1"></i>
-                                    <span>Home</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#about" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-user nav-icon m-1"></i>
-                                    <span>About</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#skills" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-magnifying-glass nav-icon m-1"></i>
-                                    <span>Skills</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#projects" className='p-1 flex flex-col text-center items-center'>
-                                    <i className="fa-solid fa-github nav-icon m-1"></i>
-                                    <span>GitHub</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#contact" className='p-1 flex flex-col items-center'>
-                                    <i className="fa-solid fa-phone nav-icon m-1"></i>
-                                    <span>Contact</span>
-                                </a>
-                            </li>
-                    </ul>
+                {/* Hamburger menu */}
+                <button
+                  className="flex flex-col justify-center items-center w-10 h-10 ml-4 focus:outline-none"
+                  onClick={() => setSidebarOpen((open) => !open)}
+                  aria-label="Toggle sidebar"
+                >
+                  <span className="block w-7 h-1 bg-(--icon-color) mb-1 rounded transition-all"></span>
+                  <span className="block w-7 h-1 bg-(--icon-color) mb-1 rounded transition-all"></span>
+                  <span className="block w-7 h-1 bg-(--icon-color) rounded transition-all"></span>
+                </button>
+                {/* Sidebar slides in from right */}
+                <div className={`fixed top-16 right-4 z-50 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} `} style={{maxWidth: '260px'}}>
+                  <Sidebar />
                 </div>
             </nav>
             </header>
