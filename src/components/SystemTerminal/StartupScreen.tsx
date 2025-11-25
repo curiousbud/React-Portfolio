@@ -18,7 +18,6 @@ interface StartupScreenProps {
 }
 
 const StartupScreen: React.FC<StartupScreenProps> = ({ messages, done }) => {
-  // Remove duplicate messages, keep order
   const unique = useMemo(() => uniqueMessages(messages), [messages]);
   // Progress bar: percent = chars typed / total chars, but 100% if done
   const totalChars = 5 * 32; // estimate: 5 lines, ~32 chars each

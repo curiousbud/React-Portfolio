@@ -1,29 +1,71 @@
 
+
+
 import React, { useEffect, useState } from 'react';
 import ReactConsole from 'react-console-emulator';
-import figlet from 'figlet';
-import axios from 'axios';
-import styles from './TerminalPage.module.css';
+import { terminalCommands } from '../terminal/commands';
+import CONFIG from '../../gitprofile.config';
 
-const directories = {
-  education: [
-    '* BSc Computer Science, Example University (2015-2019)',
-    '* MSc Software Engineering, Example University (2019-2021)',
-  ],
-  projects: [
-    '* React Portfolio',
-    '* Terminal Emulator',
-    '* Open Source Contributions',
-  ],
-  skills: [
-    '* JavaScript',
-    '* TypeScript',
-    '* React',
-    '* Node.js',
-  ],
-};
-const files = ['joke', 'credits'];
+
 const root = '~';
+
+const logoAscii = `
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                            .:-=--=--::::.                                          
+                                     .-==+++++++++++++++++++=-:                                     
+                                 .-++++++++++++++++++++++++++++++=-.                                
+                              :=+++++++==:.             .::=+++++++++=:                             
+                           :=++++++=:                          .-=++++++=.                          
+                         :++++++-.                                 .:++++++-                        
+                       :+++++=.                                       .=+++++:                      
+                      +++++-                                            .=+++++.                    
+                    -++++=                     =++++++                    .=++++=                   
+                   =++++:                     =++++++++                     :+++++.                 
+                 .++++=                      -++++++++++                      =++++:                
+                .++++-                      :++++++++++++                      -++++:               
+                ++++:                      .+++++++++++++=                      -++++:              
+               ++++-                       +++++++++++++++-                      -++++.             
+              =+++=                       +++++++++++++++++:                      -++++             
+             :++++                       +++++++++ -++++++++.                      =+++-            
+             ++++:                      =++++++++   =++++++++                      .++++            
+             ++++                      =++++++++     =++++++++                      =+++:           
+            =+++-                     :++++++++.      +++++++++                     .+++=           
+            =+++.                    .++++++++:        ++++++++=                     ++++           
+            ++++                    .++++++++-         :++++++++:                    ++++           
+            ++++                    ++++++++=                                        ++++           
+            ++++                   +++++++++  =+++++++++++++++++++.                  ++++           
+            ++++                  =++++++++  ++++++++++++++++++++++                  ++++           
+            =+++-                =++++++++  =+++++++++++++++++++++++                 ++++           
+            :++++               :++++++++. -+++++++++++++++++++++++++               :+++=           
+             ++++.             :++++++++:  ::::::::::::::::::::::::::               ++++:           
+             =++++            .++++++++-                      ---=---=:            .++++            
+              ++++-           ++++++++=                       :++++++++:           ++++:            
+              :++++.         +++++++++                         -++++++++.         =+++=             
+               =++++        +++++++++                           =++++++++        =++++              
+                +++++      =++++++++                             +++++++++      =++++               
+                 +++++.   -++++++++.                              +++++++++    =++++                
+                  =++++-  .:.::::.                                 .:::::::   +++++                 
+                   -++++=.                                                  =++++=                  
+                     +++++=                                               :+++++:                   
+                      :+++++=                                           :+++++=                     
+                        -++++++:                                      -+++++=.                      
+                          =++++++=:.                              .:++++++=.                        
+                            :++++++++=:                       ::=+++++++:                           
+                               :=+++++++++===:::.    ..::-=+++++++++=-                              
+                                   :=+++++++++++++++++++++++++++=-.                                 
+                                       :-===++++++++++++++==:.                                      
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+`;
 
 const user = 'visitor';
 const server = 'iabhinav.me';
@@ -32,138 +74,113 @@ function getPrompt(cwd: string) {
   return `${user}@${server}:${cwd}$`;
 }
 
-const Terminal: React.FC = () => {
 
-  const [greeting, setGreeting] = useState('');
-  const [cwd, setCwd] = useState(root);
+
+const asciiName = `
+█████╗  ██████╗  ██╗  ██╗ ██╗ ███╗  ██╗  █████╗  ██╗   ██╗
+██╔══██╗ ██╔══██╗ ██║  ██║ ██║ ████╗ ██║ ██╔══██╗ ██║   ██║
+███████║ ██████╔╝ ███████║ ██║ ██╔██╗██║ ███████║ ██║   ██║
+██╔══██║ ██╔══██╗ ██╔══██║ ██║ ██║╚████║ ██╔══██║ ╚██╗ ██╔╝
+██║  ██║ ██████╔╝ ██║  ██║ ██║ ██║ ╚███║ ██║  ██║  ╚████╔╝
+╚═╝  ╚═╝ ╚═════╝  ╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚══╝ ╚═╝  ╚═╝   ╚═══╝
+`;
+
+const Terminal: React.FC = () => {
   const [dateTime, setDateTime] = useState('');
-  const temperature = 'Mumbai 27°C';
+  const name = `${CONFIG.home?.firstName || ''} ${CONFIG.home?.lastName || ''}`.trim() || 'Abhinav';
 
   useEffect(() => {
-    figlet.text('ABHINAV', { font: 'Standard' }, (_err, data) => {
-      setGreeting((data || 'ABHINAV'));
-    });
-    // Date/time updater
     const updateDateTime = () => {
       const now = new Date();
-      const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
-      const day = now.getDate();
-      const month = months[now.getMonth()];
-      const year = now.getFullYear();
-      const hour = String(now.getHours()).padStart(2, '0');
-      const min = String(now.getMinutes()).padStart(2, '0');
-      const sec = String(now.getSeconds()).padStart(2, '0');
-      setDateTime(`${month} ${day}th, ${year}  ${hour}:${min}:${sec}`);
+      setDateTime(now.toLocaleString());
     };
     updateDateTime();
     const interval = setInterval(updateDateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
+
+
+  // Merge built-in navigation commands with dynamic terminal commands
   const commands = {
-    help: {
-      description: 'List available commands',
-      usage: 'help',
-      fn: () => {
-        return 'help, echo, ls, cd, joke, credits, clear';
-      },
-    },
+    ...terminalCommands,
     echo: {
       description: 'Echo input',
       usage: 'echo [text]',
       fn: (...args: string[]) => args.join(' '),
     },
-    ls: {
-      description: 'List directories/files',
-      usage: 'ls',
-      fn: () => {
-        if (cwd === root) {
-          return Object.keys(directories).concat(files).join('  ');
-        } else {
-          const dir = cwd.replace('~/', '');
-          return directories[dir as keyof typeof directories]?.join('\n') || 'No such directory';
+    clear: {
+      description: 'Clear terminal',
+      usage: 'clear',
+      fn: (terminal: unknown) => {
+        if (
+          terminal &&
+          typeof terminal === 'object' &&
+          'clearStdout' in terminal &&
+          typeof (terminal as { clearStdout?: () => void }).clearStdout === 'function'
+        ) {
+          (terminal as { clearStdout: () => void }).clearStdout();
         }
+        return '';
       },
-    },
-    cd: {
-      description: 'Change directory',
-      usage: 'cd [dir]',
-      fn: (dir: string) => {
-        if (!dir || dir === '~') {
-          setCwd(root);
-          return 'Moved to home directory';
-        }
-        if (Object.keys(directories).includes(dir)) {
-          setCwd(`~/${dir}`);
-          return `Moved to ${dir}`;
-        }
-        if (dir === '..') {
-          setCwd(root);
-          return 'Moved to home directory';
-        }
-        return 'No such directory';
-      },
-    },
-    joke: {
-      description: 'Get a programming joke',
-      usage: 'joke',
-      fn: async () => {
-        try {
-          const res = await axios.get('https://v2.jokeapi.dev/joke/Programming');
-          if (res.data.type === 'twopart') {
-            return `Q: ${res.data.setup}\nA: ${res.data.delivery}`;
-          }
-          return res.data.joke;
-        } catch {
-          return 'Failed to fetch a joke.';
-        }
-      },
-    },
-    credits: {
-      description: 'Show credits',
-      usage: 'credits',
-      fn: () =>
-        'Used libraries:\n* react-console-emulator\n* figlet\n* axios\nInspired by freeCodeCamp terminal portfolio tutorial',
     },
   };
 
-
   return (
-    <div className={styles['terminal-root']} style={{ background: '#000', minHeight: '100vh', width: '100vw', fontFamily: 'Consolas, monospace', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 0 }}>
-      {/* Top Bar */}
-      <div style={{ width: '100%', background: '#000', color: '#bfc9d4', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #222', height: 32, padding: '0 1.5rem', fontFamily: 'Consolas, monospace' }}>
-        <span style={{ fontSize: '0.95rem' }}>{temperature}</span>
-        <span style={{ fontFamily: 'monospace', fontSize: '1.1rem', letterSpacing: 1 }}>{'https://iabhinav.me'}</span>
-        <span style={{ fontSize: '0.95rem' }}>{dateTime}</span>
-      </div>
-
-      {/* Main Terminal Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        <div style={{ margin: '2.5rem 0 1.5rem 0', textAlign: 'center', width: '100%' }}>
-          <pre style={{ color: '#fff', fontSize: '2.2rem', lineHeight: 1, margin: 0, fontFamily: 'Consolas, monospace', textShadow: '0 0 8px #222' }}>{greeting}</pre>
-          <div style={{ color: '#fff', fontSize: '1.2rem', marginTop: 16, fontFamily: 'Consolas, monospace', fontWeight: 600 }}>
-            Welcome to Abhinav's Terminal Portfolio
+    <div style={{ background: '#000', minHeight: '100vh', width: '100vw', fontFamily: 'JetBrains Mono, Consolas, monospace', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 0 }}>
+      {/* Header */}
+      <header style={{ width: '100%', background: '#000', color: '#fff', borderBottom: '1px solid #222', padding: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 48, padding: '0 2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {/* Weather placeholder */}
+            <span style={{ fontSize: '1rem', color: '#bfc9d4' }}>Mumbai 27°C</span>
           </div>
-          <div style={{ color: '#bfc9d4', fontSize: '1rem', marginTop: 12, fontFamily: 'Consolas, monospace' }}>
-            Type <span style={{ color: '#fff' }}>'?'</span> or <span style={{ color: '#fff' }}>'help'</span> to view a list of available commands.
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.1rem', letterSpacing: 1 }}>
+            <a href="https://iabhinav.me" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>https://iabhinav.me</a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {/* Power icon */}
+            <span title="Power Off" style={{ fontSize: 22, cursor: 'pointer', color: '#bfc9d4', marginRight: 8 }}>⏻</span>
+            <span style={{ fontSize: '1rem', color: '#bfc9d4' }}>{dateTime}</span>
           </div>
         </div>
-        <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', background: 'transparent', borderRadius: 8, boxShadow: 'none' }}>
+      </header>
+
+      {/* Main Content: ASCII logo, name, welcome, instructions, terminal */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: '100%', overflow: 'hidden', background: '#000' }}>
+        <div className="ascii-container" style={{ marginTop: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <pre className="main-logo" style={{ color: '#fff', fontSize: '0.85rem', lineHeight: 1.05, margin: 0, fontFamily: 'JetBrains Mono, Consolas, monospace', textShadow: '0 0 8px #222', userSelect: 'text', whiteSpace: 'pre', maxWidth: '100vw', overflowX: 'auto' }}>{logoAscii}</pre>
+          <div className="ascii-name" style={{ color: '#fff', fontSize: '1.15rem', margin: '18px 0 0 0', fontFamily: 'JetBrains Mono, Consolas, monospace', fontWeight: 700, textAlign: 'center', whiteSpace: 'pre' }}>{asciiName}</div>
+          <div style={{ color: '#fff', fontSize: '1.25rem', marginTop: 12, fontFamily: 'JetBrains Mono, Consolas, monospace', fontWeight: 700, textAlign: 'center' }}>
+            Welcome to {name}'s Terminal Portfolio
+          </div>
+        </div>
+        <div style={{ color: '#bfc9d4', fontSize: '1.15rem', marginTop: 32, fontFamily: 'JetBrains Mono, Consolas, monospace', textAlign: 'center' }}>
+          Type <span style={{ color: '#fff' }}>'?'</span> or <span style={{ color: '#fff' }}>'help'</span> to view a list of available commands.
+        </div>
+        {/* Terminal area, scrollable only when needed */}
+        <div style={{ width: '100%', maxWidth: 900, margin: '32px auto 0 auto', background: 'rgba(30,30,30,0.95)', borderRadius: 14, boxShadow: '0 0 0 1px #222', overflow: 'auto', minHeight: 180, maxHeight: 420, padding: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
           <ReactConsole
             welcomeMessage={''}
-            promptLabel={<span style={{ color: '#bfc9d4' }}>{getPrompt(cwd)}{' '}</span>}
+            promptLabel={<span style={{ color: '#bfc9d4' }}>{getPrompt(root)}{' '}</span>}
             commands={commands}
             autoFocus
             noDefaults
-            style={{ background: 'transparent', color: '#fff', fontFamily: 'Consolas, monospace', fontSize: '1.15rem', boxShadow: 'none', border: 'none', padding: 0 }}
-            inputTextStyle={{ color: '#fff', fontFamily: 'Consolas, monospace' }}
-            promptLabelStyle={{ color: '#bfc9d4', fontFamily: 'Consolas, monospace' }}
+            style={{ background: 'transparent', color: '#fff', fontFamily: 'JetBrains Mono, Consolas, monospace', fontSize: '1.15rem', boxShadow: 'none', border: 'none', padding: 0, minHeight: 180, maxHeight: 420, overflowY: 'auto' }}
+            inputTextStyle={{ color: '#fff', fontFamily: 'JetBrains Mono, Consolas, monospace' }}
+            promptLabelStyle={{ color: '#bfc9d4', fontFamily: 'JetBrains Mono, Consolas, monospace' }}
           />
         </div>
-      </div>
+      </main>
+      {/* Footer */}
+      <footer style={{ width: '100%', background: '#000', color: '#fff', borderTop: '1px solid #222', padding: 0, marginTop: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 40 }}>
+          <p style={{ margin: 0, fontSize: '1rem', color: '#fff', fontFamily: 'JetBrains Mono, Consolas, monospace' }}>
+            <span style={{ marginRight: 4 }}>©</span>
+            <span>{new Date().getFullYear()}</span> <a href="https://iabhinav.me?utm_source=terminal" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Abhinav Jaiswal</a> | All Rights Reserved
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

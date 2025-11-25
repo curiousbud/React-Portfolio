@@ -229,6 +229,9 @@ const CONFIG = {
   //     >GitProfile</a> and ❤️`,
 
   enablePWA: true,
+
+  // Enable or disable the terminal power button
+  terminalPowerButton: false,
 };
 
 export default CONFIG;
