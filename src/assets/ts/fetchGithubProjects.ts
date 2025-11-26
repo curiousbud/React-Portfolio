@@ -26,13 +26,14 @@ export interface Project {
 export async function fetchGithubProjects(): Promise<Project[]> {
   const username = CONFIG.github.username;
   const mode = CONFIG.projects.github.mode || 'automatic';
-  const autoConfig = CONFIG.projects.github.automatic;
+  const automaticConfig = CONFIG.projects.github.automatic;
   const manualConfig = CONFIG.projects.github.manual;
+  const display = CONFIG.projects.github.display;
 
   const response = await fetch('/.netlify/functions/github-projects', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, mode, autoConfig, manualConfig })
+    body: JSON.stringify({ username, mode, automaticConfig, manualConfig, display })
   });
   const data = await response.json();
   if (mode === 'manual' && manualConfig.projects && manualConfig.projects.length > 0) {
