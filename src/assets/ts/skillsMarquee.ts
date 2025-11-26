@@ -1,11 +1,11 @@
 // Handles the animation logic for the Skills marquee component
 
 export interface MarqueeAnimation {
-	start: (updatePositions: (cb: (prev: number[]) => number[]) => void, containerWidth: number, logoWidth: number, speed: number) => () => void;
+	start: (updatePositions: (cb: (prev: number[]) => number[]) => void, logoWidth: number, speed: number) => () => void;
 }
 
 export const skillsMarquee: MarqueeAnimation = {
-	start: (updatePositions, containerWidth, logoWidth, speed) => {
+	start: (updatePositions, logoWidth, speed) => {
 		let animationFrame: number;
 		const animate = () => {
 			updatePositions(prev => {
