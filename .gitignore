@@ -7,7 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+loading video.mp4
 .env
+terminalinfo.md
 
 node_modules
 dist
