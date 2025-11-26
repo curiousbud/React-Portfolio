@@ -2,11 +2,12 @@
 // All terminal commands as per the screenshot, stub implementations for now.
 import CONFIG from '../../gitprofile.config';
 
-const dynamicList = (arr: any[], fields: string[]) =>
+type GenericObject = Record<string, unknown>;
+const dynamicList = (arr: GenericObject[], fields: string[]) =>
   arr.length === 0 ? 'No data found.' : arr.map(item => fields.map(f => item[f]).filter(Boolean).join(' - ')).join('\n');
 
 const commandList = [
-  'abhinav', 'about', 'age', 'antonym', 'ascii', 'asciiqr', 'base64', 'calendar',
+  'Areeb', 'about', 'age', 'antonym', 'ascii', 'asciiqr', 'base64', 'calendar',
   'capitalize', 'clear', 'coin', 'commands', 'contact', 'countdays', 'country', 'curl',
   'date', 'define', 'dns', 'dnslookup', 'emoji', 'geo', 'github', 'hash', 'help', 'history',
   'ip', 'json', 'lowercase', 'matrix', 'ping', 'projects', 'qr', 'quote', 'remind', 'reset',
@@ -19,9 +20,9 @@ function formatHelpMenu() {
   // 7 columns, fill left to right
   const cols = 7;
   const rows = Math.ceil(commandList.length / cols);
-  let lines = [];
+  const lines = [];
   for (let r = 0; r < rows; r++) {
-    let row = [];
+    const row = [];
     for (let c = 0; c < cols; c++) {
       const idx = c * rows + r;
       if (idx < commandList.length) {
@@ -42,7 +43,7 @@ function formatHelpMenu() {
 }
 
 export const terminalCommands = {
-  abhinav: {
+  Areeb: {
     description: 'About Areeb Khan',
     fn: () => `${CONFIG.home?.firstName || 'Areeb'} ${CONFIG.home?.lastName || 'Khan'}, ${CONFIG.home?.headline || ''}`.trim()
   },
