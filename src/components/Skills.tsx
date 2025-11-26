@@ -55,7 +55,7 @@ const Skills: React.FC = () => {
   useEffect(() => {
     if (!containerWidth) return;
     if (animationCleanup.current) animationCleanup.current();
-    animationCleanup.current = skillsMarquee.start(setPositions, containerWidth, LOGO_WIDTH, SPEED);
+    animationCleanup.current = skillsMarquee.start(setPositions, LOGO_WIDTH, SPEED);
     return () => {
       if (animationCleanup.current) animationCleanup.current();
     };
