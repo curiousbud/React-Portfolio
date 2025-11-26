@@ -12,9 +12,22 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  const { username, mode, manualConfig } = JSON.parse(event.body || '{}');
+  const {
+    username,
+    mode,
+    manualConfig,
+    automaticConfig,
+    display = true,
+  } = JSON.parse(event.body || '{}');
 
   let query = '';
+  if (!display) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ data: { user: { repositories: { nodes: [] } } } }),
+    };
+  }
+
   if (mode === 'manual' && manualConfig?.projects?.length > 0) {
     const repoNames = manualConfig.projects;
     const queries = repoNames.map((fullName: string, i: number) => {
@@ -33,9 +46,12 @@ export const handler: Handler = async (event) => {
     });
     query = `query { ${queries.join('\n')} }`;
   } else {
+    // Automatic mode: use config for sort, limit, exclude
+    const sortBy = automaticConfig?.sortBy === 'updated' ? 'UPDATED_AT' : 'STARGAZERS';
+    const limit = automaticConfig?.limit || 100;
     query = `query {
       user(login: "${username}") {
-        repositories(first: 100, orderBy: {field: STARGAZERS, direction: DESC}) {
+        repositories(first: ${limit}, orderBy: {field: ${sortBy}, direction: DESC}) {
           nodes {
             id
             name
@@ -62,6 +78,37 @@ export const handler: Handler = async (event) => {
   });
 
   const data = await response.json();
+
+  // Post-process results for exclude.forks and exclude.projects in automatic mode
+  if (mode !== 'manual' && automaticConfig) {
+    type RepoNode = {
+      id: string;
+      name: string;
+      description: string;
+      url: string;
+      stargazerCount: number;
+      forkCount: number;
+      primaryLanguage?: { name: string; color: string };
+      isFork?: boolean;
+      updatedAt?: string;
+    };
+    let nodes: RepoNode[] = data?.data?.user?.repositories?.nodes || [];
+    // Exclude forks if set
+    if (automaticConfig.exclude?.forks) {
+      nodes = nodes.filter((repo: RepoNode) => !repo.isFork);
+    }
+    // Exclude specific projects
+    if (automaticConfig.exclude?.projects?.length) {
+      const excludeSet = new Set(automaticConfig.exclude.projects.map((p: string) => p.toLowerCase()));
+      nodes = nodes.filter((repo: RepoNode) => !excludeSet.has(`${username.toLowerCase()}/${repo.name.toLowerCase()}`));
+    }
+    // Limit to config limit
+    if (automaticConfig.limit && nodes.length > automaticConfig.limit) {
+      nodes = nodes.slice(0, automaticConfig.limit);
+    }
+    data.data.user.repositories.nodes = nodes;
+  }
+
   return {
     statusCode: 200,
     body: JSON.stringify(data),
